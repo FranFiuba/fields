@@ -1,5 +1,5 @@
 use std::fmt;
-use std::ops::{Add, Mul};
+use std::ops::{Add, Div, Mul};
 
 #[derive(Debug)]
 pub struct FieldElement {
@@ -48,6 +48,23 @@ impl Mul for FieldElement {
     }
 }
 
+impl Div for FieldElement {
+    type Output = Self;
+
+    fn div(self, other: Self) -> Self {
+        if self.prime != other.prime {
+            panic!("Cannot divide two numbers of different Fields");
+        }
+
+        if other.num == 0 {
+            panic!("Cannot divide by zero-valued FieldElement!");
+        }
+
+        let other_inverse = other.pow(self.prime - 2);
+        self * other_inverse
+    }
+}
+
 impl PartialEq for FieldElement {
     fn eq(&self, other: &Self) -> bool {
         self.num == other.num && self.prime == other.prime
@@ -88,4 +105,11 @@ fn main() {
     let pow_total: FieldElement = pow_elem1.pow(power);
 
     assert_eq!(pow_total, pow_total_hardcoded);
+
+    let div_elem1: FieldElement = FieldElement::new(2, 7);
+    let div_elem2: FieldElement = FieldElement::new(3, 7);
+    let div_total_hardcoded: FieldElement = FieldElement::new(3, 7);
+    let div_total: FieldElement = div_elem1 / div_elem2;
+
+    assert_eq!(div_total, div_total_hardcoded);
 }
