@@ -1,3 +1,4 @@
+use std::fmt;
 use std::ops::{Add, Mul};
 
 #[derive(Debug)]
@@ -49,6 +50,12 @@ impl PartialEq for FieldElement {
     }
 }
 
+impl fmt::Display for FieldElement {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        write!(f, "number: {}, prime: {}", self.num, self.prime)
+    }
+}
+
 fn main() {
    let field : FieldElement = FieldElement::new(10, 11);
    let other_field : FieldElement = FieldElement::new(10, 11);
@@ -71,4 +78,7 @@ fn main() {
 
    assert_eq!(mul_total, mul_total_hardcoded);
 }
+
+
+
 
