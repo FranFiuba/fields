@@ -1,4 +1,4 @@
-use std::ops::Add;
+use std::ops::{Add, Mul};
 
 #[derive(Debug)]
 pub struct FieldElement {
@@ -30,6 +30,18 @@ impl Add for FieldElement {
   }
 }
 
+impl Mul for FieldElement {
+  type Output = Self;
+
+  fn mul(self, other: Self) -> Self{
+    if self.prime != other.prime {
+      panic!("Cannot multiplicate two numbers in different field");
+    }
+    let num: u32 = (self.num * other.num) % self.prime;
+    let prime: u32 = self.prime;
+    Self {num, prime}
+  }
+}
 
 impl PartialEq for FieldElement {
     fn eq(&self, other: &Self) -> bool {
@@ -51,5 +63,12 @@ fn main() {
    let sum_total : FieldElement = sum_elem1.add(sum_elem2);
 
    assert_eq!(sum_total, sum_total_hardcoded);
+
+   let mul_elem1 : FieldElement = FieldElement::new(2, 10);
+   let mul_elem2 : FieldElement = FieldElement::new(2, 10);
+   let mul_total_hardcoded : FieldElement = FieldElement::new(4, 10);
+   let mul_total : FieldElement = mul_elem1.mul(mul_elem2);
+
+   assert_eq!(mul_total, mul_total_hardcoded);
 }
 
