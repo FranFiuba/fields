@@ -17,7 +17,7 @@ impl FieldElement {
     }
 
     pub fn pow(self, power: i32) -> Self {
-        let exponent: i32 = power % ((self.prime - 1) as i32);
+        let exponent: i32 = power.rem_euclid((self.prime - 1) as i32);
         let result = u32::pow(self.num, exponent as u32) % self.prime;
         FieldElement::new(result, self.prime)
     }
@@ -113,4 +113,11 @@ fn main() {
     let div_total: FieldElement = div_elem1 / div_elem2;
 
     assert_eq!(div_total, div_total_hardcoded);
+
+    let pow_elem1: FieldElement = FieldElement::new(2, 7);
+    let power: i32 = -1;
+    let pow_total_hardcoded: FieldElement = FieldElement::new(4, 7);
+    let pow_total: FieldElement = pow_elem1.pow(power);
+
+    assert_eq!(pow_total, pow_total_hardcoded);
 }
