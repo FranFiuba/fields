@@ -16,8 +16,9 @@ impl FieldElement {
         Self { num, prime }
     }
 
-    pub fn pow(self, power: u32) -> Self {
-        let result = u32::pow(self.num, power) % self.prime;
+    pub fn pow(self, power: i32) -> Self {
+        let exponent: i32 = power % ((self.prime - 1) as i32);
+        let result = u32::pow(self.num, exponent as u32) % self.prime;
         FieldElement::new(result, self.prime)
     }
 }
@@ -60,7 +61,7 @@ impl Div for FieldElement {
             panic!("Cannot divide by zero-valued FieldElement!");
         }
 
-        let other_inverse = other.pow(self.prime - 2);
+        let other_inverse = other.pow((self.prime - 2) as i32);
         self * other_inverse
     }
 }
@@ -100,7 +101,7 @@ fn main() {
     assert_eq!(mul_total, mul_total_hardcoded);
 
     let pow_elem1: FieldElement = FieldElement::new(2, 10);
-    let power: u32 = 4;
+    let power: i32 = 4;
     let pow_total_hardcoded: FieldElement = FieldElement::new(6, 10);
     let pow_total: FieldElement = pow_elem1.pow(power);
 
