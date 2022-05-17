@@ -15,6 +15,11 @@ impl FieldElement {
 
         Self { num, prime }
     }
+
+    pub fn pow(self, power: u32) -> Self {
+        let result = u32::pow(self.num, power) % self.prime;
+        FieldElement::new(result, self.prime)
+    }
 }
 
 impl Add for FieldElement {
@@ -76,4 +81,11 @@ fn main() {
     let mul_total: FieldElement = mul_elem1.mul(mul_elem2);
 
     assert_eq!(mul_total, mul_total_hardcoded);
+
+    let pow_elem1: FieldElement = FieldElement::new(2, 10);
+    let power: u32 = 4;
+    let pow_total_hardcoded: FieldElement = FieldElement::new(6, 10);
+    let pow_total: FieldElement = pow_elem1.pow(power);
+
+    assert_eq!(pow_total, pow_total_hardcoded);
 }
